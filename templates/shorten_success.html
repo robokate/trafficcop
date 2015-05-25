@@ -1,0 +1,15 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12">
+  <h1>Congratulations!</h1>
+    <p>You have managed to shorten {{ url }} into {{ short_url }}</p>
+    </div>
+{% endblock %}

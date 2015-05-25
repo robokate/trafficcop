@@ -2,31 +2,33 @@ __author__ = 'kate'
 
 import redis
 
+import models.urlencoder
+
 class Cache(object):
     r_server = redis.Redis("localhost")
+    encoder = models.urlencoder.UrlEncoder()
 
     @staticmethod
     def get(key):
         return Cache.r_server.get(key)
 
     @staticmethod
-    def put(key, value):
-        Cache.r_server.set(key, value, nx=True);
-        return Cache.get(key)
+    def put_url(url):
+        if not url.startswith('http://'):
+            url = "http://{0}".format(url)
+        short_url = Cache.encoder.encode_url(Cache.get_next_key())
+        Cache.r_server.set(short_url, url, nx=True)
+        return short_url
 
     @staticmethod
     def dump():
         return Cache.r_server.keys()
 
     @staticmethod
-    def is_valid_api_key(apikey):
-        try:
-            Cache.r_server.sismember("api_keys", apikey)
-        except BaseException as e:
-            print "{0} while {1}".format(e, "checking api key")
-        return Cache.r_server.sismember("api_keys", apikey)
+    def is_valid_api_key(api_key):
+        return Cache.r_server.sismember("api_keys", api_key)
 
     @staticmethod
     def get_next_key():
-        return Cache.r_server.dbsize() + 1
+        return Cache.r_server.dbsize()
 

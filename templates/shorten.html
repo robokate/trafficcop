@@ -1,0 +1,21 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12">
+  <h1>Let's try to shorten this...</h1>
+ {% from "__formhelpers.html" import render_field %}
+<form method=post action="/shorten?apikey={{ apikey }}">
+  <dl>
+    {{ render_field(form.url_to_shorten) }}
+  </dl>
+  <p><input type=submit value=Shorten>
+</form>
+    </div>
+{% endblock %}

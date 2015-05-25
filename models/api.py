@@ -5,16 +5,13 @@ from flask import request, abort
 
 from cache import Cache
 
-# The actual decorator function
 def require_apikey(view_function):
     @wraps(view_function)
-    # the new, post-decoration function. Note *args and **kwargs here.
     def decorated_function(*args, **kwargs):
         if request.args.get('apikey'):
-            key = request.args.get('apikey')
-            print key
+            api_key = request.args.get('apikey')
             try:
-                if Cache.is_valid_api_key(key):
+                if Cache.is_valid_api_key(api_key):
                     return view_function(*args, **kwargs)
                 else:
                     abort(401)
